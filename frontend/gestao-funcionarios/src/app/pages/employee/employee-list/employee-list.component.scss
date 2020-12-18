@@ -1,0 +1,70 @@
+table {
+    width: 100%;
+}
+
+.mat-row:nth-child(even) {
+    background-color: white;
+}
+
+.mat-row:nth-child(odd) {
+    background-color: whitesmoke;
+}
+
+.mat-table .mat-row:hover {
+    background: lightgrey;
+}
+
+#btnAdd {
+    float: right;
+    border-radius: 20px 20px;
+}
+
+#btnAdd:hover {
+    color: red;
+    background-color: white;
+}
+
+.btnAction {
+    border: 0;
+    outline: none;
+    cursor: pointer;
+    color: purple;
+    background-color: transparent;
+}
+
+.btnAction:hover {
+    color: black;
+}
+
+.btnDelete {
+    color: red;
+}
+
+.btnDelete:hover {
+    color: black;
+}
+
+.mat-slide-toggle {
+    &.mat-checked {
+        ::ng-deep.mat-slide-toggle-bar::after {
+            content: "Sim";
+            font-size: 45%;
+            font-weight: 700;
+            color: black;
+            position: absolute;
+            left: 4px;
+            top: -5px;
+        }
+    }
+    &:not(.mat-checked) {
+        ::ng-deep.mat-slide-toggle-bar::after {
+            content: "Não";
+            font-size: 45%;
+            font-weight: 700;
+            color: white;
+            position: absolute;
+            left: 21px;
+            top: -5px;
+        }
+    }
+}

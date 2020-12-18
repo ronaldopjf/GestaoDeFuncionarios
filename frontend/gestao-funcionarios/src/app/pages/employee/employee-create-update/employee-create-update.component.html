@@ -1,0 +1,82 @@
+<button id="btnDismis" (click)="onNoClick()">
+    <span>&times;</span>
+</button>
+
+<h1 mat-dialog-title>{{ data.description }}</h1>
+
+<mat-tab-group mat-align-tabs="start">
+    <mat-tab label="Perfil">
+    </mat-tab>
+</mat-tab-group>
+
+<div mat-dialog-content>
+
+    <mat-label class="mat-label">Dados Pessoais:</mat-label>
+    <mat-form-field color="accent">
+        <mat-label>Nome</mat-label>
+        <input matInput name="name" required maxlength="100" placeholder="Nome"
+            [(ngModel)]="data.employeeForCreateUpdate.name" />
+    </mat-form-field>
+
+    <mat-form-field color="accent">
+        <mat-label>E-Mail</mat-label>
+        <input matInput name="email" required maxlength="50" placeholder="E-Mail"
+            [(ngModel)]="data.employeeForCreateUpdate.email" />
+    </mat-form-field>
+
+    <mat-form-field color="accent">
+        <mat-label>Departamento</mat-label>
+        <mat-select name="idDepartment" required [(ngModel)]="data.employeeForCreateUpdate.idDepartment">
+            <mat-option *ngFor="let department of departments" [value]="department.id">
+                {{ department.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field color="accent">
+        <mat-label>Data de Nascimento</mat-label>
+        <input matInput [matDatepicker]="dataNascimento" name="dateOfBirth" placeholder="Data de Nascimento"
+            [(ngModel)]="data.employeeForCreateUpdate.dateOfBirth" />
+        <mat-datepicker-toggle matSuffix [for]="dataNascimento"></mat-datepicker-toggle>
+        <mat-datepicker #dataNascimento></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field color="accent">
+        <mat-label>Telefone Primário</mat-label>
+        <input matInput name="primaryPhone" maxlength="50" placeholder="Telefone Primário"
+            [(ngModel)]="data.employeeForCreateUpdate.primaryPhone" />
+    </mat-form-field>
+
+    <mat-form-field color="accent">
+        <mat-label>Telefone Secundário</mat-label>
+        <input matInput name="secondaryPhone" maxlength="50" placeholder="Telefone Secundário"
+            [(ngModel)]="data.employeeForCreateUpdate.secondaryPhone" />
+    </mat-form-field>
+
+    <mat-label class="mat-label">Sistema:</mat-label>
+    <mat-form-field color="accent">
+        <mat-label>Login</mat-label>
+        <input matInput name="login" maxlength="50" placeholder="Login"
+            [(ngModel)]="data.employeeForCreateUpdate.login" />
+    </mat-form-field>
+
+    <mat-slide-toggle [(ngModel)]="data.employeeForCreateUpdate.access">Acesso ao sistema</mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="data.employeeForCreateUpdate.active">Ativo na agência</mat-slide-toggle>
+
+    <mat-form-field color="accent">
+        <mat-label>Senha</mat-label>
+        <input matInput type="password" name="password" maxlength="50" placeholder="Senha"
+            [(ngModel)]="data.employeeForCreateUpdate.password" />
+    </mat-form-field>
+
+    <mat-form-field color="accent">
+        <mat-label>Confirmar Senha</mat-label>
+        <input matInput type="password" name="confirmPassword" maxlength="50" placeholder="Confirmar Senha" />
+    </mat-form-field>
+
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-raised-button id="btnCancel" (click)="onNoClick()">Cancelar</button>
+    <button mat-raised-button id="btnSave" [mat-dialog-close]="data.employeeForCreateUpdate">Salvar</button>
+</div>

@@ -1,0 +1,30 @@
+<mat-drawer-container hasBackdrop="false">
+
+    <mat-drawer #drawer mode="over" [opened]="showSideNav" position="end">
+
+        <button id="btnDismis" (click)="hideSideNav()">
+            <span>&times;</span>
+        </button>
+
+        <p id="pName" *ngIf="employeeForDetails">{{employeeForDetails.name}}</p>
+        <p id="pDepartment" *ngIf="employeeForDetails">{{employeeForDetails.department.name}}</p>
+        <hr />
+        <p id="pTitle" *ngIf="employeeForDetails">E-MAIL</p>
+        <p id="pText" *ngIf="employeeForDetails">{{employeeForDetails.email}}</p>
+        <p id="pTitle" *ngIf="employeeForDetails">TELEFONES</p>
+        <p id="pPrimaryPhone" *ngIf="employeeForDetails">{{employeeForDetails.primaryPhone}}</p>
+        <p id="pText" *ngIf="employeeForDetails">{{employeeForDetails.secondaryPhone}}</p>
+        <p id="pTitle" *ngIf="employeeForDetails">ACESSO
+        <mat-slide-toggle *ngIf="employeeForDetails" [ngModel]="employeeForDetails.access" [disabled]="true">
+        </mat-slide-toggle></p>
+        <p id="pTitle" *ngIf="employeeForDetails">ATIVO
+        <mat-slide-toggle *ngIf="employeeForDetails" [ngModel]="employeeForDetails.active" [disabled]="true">
+        </mat-slide-toggle></p>
+
+    </mat-drawer>
+
+    <mat-drawer-content>
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+
+</mat-drawer-container>

@@ -1,0 +1,64 @@
+<div class="example-button-row">
+    <button id="btnAdd" mat-raised-button color="accent" (click)="newEmployee()">+ Novo funcionário</button>
+</div>
+
+<mat-form-field>
+    <mat-label>Busca</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Ana" #input>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
+            <td mat-cell *matCellDef="let row"> {{row.department.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+            <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="primaryPhone">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Telefone Primário </th>
+            <td mat-cell *matCellDef="let row"> {{row.primaryPhone}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="access">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Acesso ao Sistema </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-slide-toggle [ngModel]="row.access" [disabled]="true"></mat-slide-toggle>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Actions">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ações </th>
+            <td mat-cell *matCellDef="let row; let i = index;">
+                <button class="btnAction btnDetails" id="btnDetails{{i}}" hidden (click)="showEmployee(row)"><mat-icon>remove_red_eye</mat-icon></button>
+                <button class="btnAction btnEdit" id="btnEdit{{i}}" hidden (click)="editEmployee(row.id)"><mat-icon>edit</mat-icon></button>
+                <button class="btnAction btnDelete" id="btnDelete{{i}}" hidden (click)="confirmDeletion(row)"><mat-icon>delete</mat-icon></button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;" (mouseover)='mouseOverRow(i)' (mouseleave)='mouseLeaveRow(i)'></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="6">Nenhum dado corresponde ao filtro "{{input.value}}"</td>
+        </tr>
+    </table>
+
+    <mat-paginator
+        [length]="dataSource.filteredData.length"
+        [pageIndex]="0"
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>

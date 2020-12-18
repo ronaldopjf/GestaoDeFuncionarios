@@ -1,0 +1,35 @@
+h1 {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+}
+
+.mat-dialog-title .mat-icon {
+    top: 5px;
+    position: relative;
+    cursor: grab;
+}
+
+#btnCancel {
+    border-radius: 20px 20px;
+    color: white;
+    background-color: gray;
+}
+
+#btnCancel:hover {
+    color: gray;
+    background-color: white;
+}
+
+#btnConfirm {
+    border-radius: 20px 20px;
+    color: white;
+    background-color: purple;
+}
+
+#btnConfirm:hover {
+    color: purple;
+    background-color: white;
+}
