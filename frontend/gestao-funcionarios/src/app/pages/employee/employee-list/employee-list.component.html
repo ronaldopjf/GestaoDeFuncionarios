@@ -8,7 +8,10 @@
     <mat-label>Busca</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Ana" #input>
 </mat-form-field>
-<button mat-button color="warn" *ngIf="input.value" (click)="input.value=''" (click)="applyCleanFilter(input.value)">X</button>
+<button mat-icon-button color="primary" *ngIf="input.value" (click)="input.value=''"
+    (click)="applyCleanFilter(input.value)">
+    <mat-icon>clear</mat-icon>
+</button>
 
 <p id="pCountRegisters">{{dataSource.filteredData.length}} registros</p>
 
@@ -86,7 +89,7 @@
             (mouseleave)='mouseLeaveRow(i)'></tr>
 
         <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="6">Nenhum dado corresponde ao filtro "{{input.value}}"</td>
+            <td class="mat-cell" colspan="7">Nenhum dado corresponde ao filtro "{{input.value}}"</td>
         </tr>
     </table>
 
