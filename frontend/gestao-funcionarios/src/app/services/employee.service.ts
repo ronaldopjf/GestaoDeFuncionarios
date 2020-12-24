@@ -5,9 +5,11 @@ import { Observable } from 'rxjs';
 import { BaseService } from './base.service';
 import { environment } from 'src/environments/environment';
 import { EmployeeForCreateUpdate } from '../models/employee/employeeForCreateUpdate';
+import { EmployeeForRead } from '../models/employee/employeeForRead';
 
 @Injectable()
 export class EmployeeService extends BaseService {
+
   private employeeUrl: string;
 
   public constructor(http: HttpClient) {
@@ -34,5 +36,9 @@ export class EmployeeService extends BaseService {
 
   public deleteEmployee(id: number): Observable<any> {
     return this.delete(this.employeeUrl, `${id}`);
+  }
+
+  public deleteManyEmployees(employees: EmployeeForRead[]): Observable<any> {
+    return this.post(`${this.employeeUrl}/delete`, employees);
   }
 }

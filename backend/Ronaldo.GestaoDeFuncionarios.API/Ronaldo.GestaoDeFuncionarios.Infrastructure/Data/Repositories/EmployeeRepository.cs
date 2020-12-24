@@ -14,11 +14,22 @@ namespace Ronaldo.GestaoDeFuncionarios.Infrastructure.Data.Repositories
 
         public IEnumerable<Employee> Get()
         {
-            var employees = _dataContext.Employees
+            return _dataContext.Employees
                 .Include(employee => employee.Department)
                 .ToList();
+        }
 
-            return employees;
+        public void Delete(IEnumerable<Employee> employees)
+        {
+            var allEmployees = Get();
+            var employeesForRemove = new List<Employee>();
+
+            foreach (var item in employees)
+            {
+                employeesForRemove.Add(allEmployees.FirstOrDefault(e => e.Id == item.Id));
+            }
+
+            _dataContext.Employees.RemoveRange(employeesForRemove);
         }
     }
 }

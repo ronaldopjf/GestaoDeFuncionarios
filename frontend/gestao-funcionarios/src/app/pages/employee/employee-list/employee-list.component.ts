@@ -12,6 +12,7 @@ import { EmployeeCreateUpdateComponent } from '../employee-create-update/employe
 import { EmployeeForCreateUpdate } from 'src/app/models/employee/employeeForCreateUpdate';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm/confirm-dialog/confirm-dialog.component';
 import { HeaderService } from 'src/app/services/header.service';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-employee-list',
@@ -20,8 +21,9 @@ import { HeaderService } from 'src/app/services/header.service';
 })
 export class EmployeeListComponent implements OnInit {
   public employees: EmployeeForRead[] = [];
-  public displayedColumns: string[] = ['name', 'email', 'department', 'primaryPhone', 'access', 'Actions'];
+  public displayedColumns: string[] = ['select', 'name', 'email', 'department', 'primaryPhone', 'access', 'Actions'];
   public dataSource: MatTableDataSource<EmployeeForRead>;
+  public selection = new SelectionModel<EmployeeForRead>(true, []);
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   private isDisplayed;
@@ -96,8 +98,30 @@ export class EmployeeListComponent implements OnInit {
     this.employeeService.deleteEmployee(id).subscribe(result => {
       this.openSnackBar('Ação realizada com sucesso', 'Excluir Funcionário');
       this.getEmployees();
-    }, () => {
-      this.openSnackBar('A ação falhou', 'Excluir Funcionário');
+    }, (error) => {
+      this.openSnackBar(error.error.error, 'Excluir Funcionário');
+    });
+  }
+
+  public confirmDeletionOfMany(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { title: 'Excluir Funcionários', message: `Confirma a exclusão de ${this.dataSource.filteredData.length} funcionários?` }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!isNullOrUndefined(result)) {
+        this.deleteManyEmployees(this.dataSource.filteredData)
+      }
+    });
+  }
+
+  private deleteManyEmployees(employees: EmployeeForRead[]): void {
+    this.employeeService.deleteManyEmployees(employees).subscribe(result => {
+      this.openSnackBar('Ação realizada com sucesso', 'Excluir Funcionários');
+      this.selection.clear();
+      this.getEmployees();
+    }, (error) => {
+      this.openSnackBar(error.error.error, 'Excluir Funcionários');
     });
   }
 
@@ -137,6 +161,15 @@ export class EmployeeListComponent implements OnInit {
     }
   }
 
+  public applyCleanFilter(inputValue: string): any {
+    const filterValue = inputValue;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
   public mouseOverRow(index: number): any {
     document.getElementById('btnDetails' + index).hidden = false;
     document.getElementById('btnEdit' + index).hidden = false;
@@ -155,5 +188,27 @@ export class EmployeeListComponent implements OnInit {
       horizontalPosition: 'right',
       verticalPosition: 'top'
     });
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  public isAllSelected(): boolean {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numRows > 0 && numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  public masterToggle(): void {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  public checkboxLabel(row?: EmployeeForRead): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.dataSource.data.indexOf(row) + 1}`;
   }
 }

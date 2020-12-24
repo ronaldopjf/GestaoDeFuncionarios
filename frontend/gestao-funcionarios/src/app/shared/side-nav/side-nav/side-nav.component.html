@@ -1,6 +1,6 @@
-<mat-drawer-container hasBackdrop="false">
+<mat-drawer-container hasBackdrop="true">
 
-    <mat-drawer #drawer mode="over" [opened]="showSideNav" position="end">
+    <mat-drawer #drawer mode="over" [opened]="showSideNav" position="end" disableClose="true">
 
         <button id="btnDismis" (click)="hideSideNav()">
             <span>&times;</span>
@@ -15,11 +15,13 @@
         <p id="pPrimaryPhone" *ngIf="employeeForDetails">{{employeeForDetails.primaryPhone}}</p>
         <p id="pText" *ngIf="employeeForDetails">{{employeeForDetails.secondaryPhone}}</p>
         <p id="pTitle" *ngIf="employeeForDetails">ACESSO
-        <mat-slide-toggle *ngIf="employeeForDetails" [ngModel]="employeeForDetails.access" [disabled]="true">
-        </mat-slide-toggle></p>
+            <mat-slide-toggle *ngIf="employeeForDetails" [ngModel]="employeeForDetails.access" [disabled]="true">
+            </mat-slide-toggle>
+        </p>
         <p id="pTitle" *ngIf="employeeForDetails">ATIVO
-        <mat-slide-toggle *ngIf="employeeForDetails" [ngModel]="employeeForDetails.active" [disabled]="true">
-        </mat-slide-toggle></p>
+            <mat-slide-toggle *ngIf="employeeForDetails" [ngModel]="employeeForDetails.active" [disabled]="true">
+            </mat-slide-toggle>
+        </p>
 
     </mat-drawer>
 

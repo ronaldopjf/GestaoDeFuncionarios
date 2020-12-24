@@ -11,7 +11,6 @@ namespace Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Interfa
         ResponseObject<EmployeeForReadDto> Post(EmployeeForCreateDto employeeForCreateDto);
         ResponseObject<EmployeeForReadDto> Put(EmployeeForUpdateDto employeeForUpdateDto);
         ResponseObject<bool> Delete(int id);
-        ResponseObject<bool> Activate(int id);
-        ResponseObject<bool> Inactivate(int id);
+        ResponseObject<bool> Delete(IEnumerable<EmployeeForReadDto> employees);
     }
 }

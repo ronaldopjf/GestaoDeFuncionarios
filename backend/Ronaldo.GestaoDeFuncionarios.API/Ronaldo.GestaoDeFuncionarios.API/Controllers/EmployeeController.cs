@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.DTOs;
 using Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Interfaces.Services;
+using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -78,6 +79,24 @@ namespace Ronaldo.GestaoDeFuncionarios.API.Controllers
         public IActionResult Delete([FromRoute] int id)
         {
             var result = _employeeService.Delete(id);
+            if (result.Success)
+            {
+                return Ok(result.Object);
+            }
+
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                return BadRequest(new { error = result.Message });
+            }
+
+            return StatusCode(500);
+        }
+
+        // POST <EmployeeController>/delete
+        [HttpPost("delete")]
+        public IActionResult Delete([FromBody] IEnumerable<EmployeeForReadDto> employees)
+        {
+            var result = _employeeService.Delete(employees);
             if (result.Success)
             {
                 return Ok(result.Object);

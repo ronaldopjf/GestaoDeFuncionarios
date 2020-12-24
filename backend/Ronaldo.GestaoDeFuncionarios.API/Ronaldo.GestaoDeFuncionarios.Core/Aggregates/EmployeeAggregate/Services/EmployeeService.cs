@@ -81,14 +81,14 @@ namespace Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Service
                 : new ResponseObject<bool>(false, "A exclusão falhou", false);
         }
 
-        public ResponseObject<bool> Activate(int id)
+        public ResponseObject<bool> Delete(IEnumerable<EmployeeForReadDto> employees)
         {
-            throw new System.NotImplementedException();
-        }
+            _employeeRepository.Delete(_mapper.Map<IEnumerable<Employee>>(employees));
+            var commit = _unityOfWork.Commit();
 
-        public ResponseObject<bool> Inactivate(int id)
-        {
-            throw new System.NotImplementedException();
+            return commit
+                ? new ResponseObject<bool>(true, "Funcionários excluídos com sucesso", true)
+                : new ResponseObject<bool>(false, "A exclusão falhou", false);
         }
     }
 }
