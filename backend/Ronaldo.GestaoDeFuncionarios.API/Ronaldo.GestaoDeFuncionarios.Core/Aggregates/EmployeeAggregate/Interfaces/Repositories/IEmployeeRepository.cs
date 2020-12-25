@@ -6,6 +6,8 @@ namespace Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Interfa
 {
     public interface IEmployeeRepository : IRepository<Employee>
     {
+        int CountAccess();
+        Employee Get(string login);
         void Delete(IEnumerable<Employee> employees);
     }
 }

@@ -41,4 +41,8 @@ export class EmployeeService extends BaseService {
   public deleteManyEmployees(employees: EmployeeForRead[]): Observable<any> {
     return this.post(`${this.employeeUrl}/delete`, employees);
   }
+
+  public canAccess(): Observable<any> {
+    return this.get(`${this.employeeUrl}/canAccess`);
+  }
 }

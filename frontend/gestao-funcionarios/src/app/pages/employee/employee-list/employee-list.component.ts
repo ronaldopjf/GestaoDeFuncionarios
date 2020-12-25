@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -26,6 +26,7 @@ export class EmployeeListComponent implements OnInit {
   public selection = new SelectionModel<EmployeeForRead>(true, []);
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild('searchInput') searchInput: ElementRef;
   private isDisplayed;
 
   public constructor(
@@ -118,7 +119,7 @@ export class EmployeeListComponent implements OnInit {
   private deleteManyEmployees(employees: EmployeeForRead[]): void {
     this.employeeService.deleteManyEmployees(employees).subscribe(result => {
       this.openSnackBar('Ação realizada com sucesso', 'Excluir Funcionários');
-      this.selection.clear();
+      this.applyCleanFilter();
       this.getEmployees();
     }, (error) => {
       this.openSnackBar(error.error.error, 'Excluir Funcionários');
@@ -161,9 +162,10 @@ export class EmployeeListComponent implements OnInit {
     }
   }
 
-  public applyCleanFilter(inputValue: string): any {
-    const filterValue = inputValue;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  public applyCleanFilter(): any {
+    this.selection.clear();
+    const inputValue = this.searchInput.nativeElement.value = '';
+    this.dataSource.filter = inputValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();

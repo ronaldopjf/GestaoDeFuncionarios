@@ -109,5 +109,15 @@ namespace Ronaldo.GestaoDeFuncionarios.API.Controllers
 
             return StatusCode(500);
         }
+
+        // GET <EmployeeController>/canAccess
+        [HttpGet("canAccess")]
+        public IActionResult CanAccess()
+        {
+            var result = _employeeService.CanAccess();
+            if (result == null)
+                return StatusCode(500);
+            return Ok(result);
+        }
     }
 }

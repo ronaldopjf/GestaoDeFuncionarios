@@ -6,10 +6,9 @@
 
 <mat-form-field>
     <mat-label>Busca</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Ana" #input>
+    <input matInput #searchInput (keyup)="applyFilter($event)" placeholder="Ex. Ana">
 </mat-form-field>
-<button mat-icon-button color="primary" *ngIf="input.value" (click)="input.value=''"
-    (click)="applyCleanFilter(input.value)">
+<button mat-icon-button *ngIf="searchInput.value" (click)="applyCleanFilter()" color="primary">
     <mat-icon>clear</mat-icon>
 </button>
 
@@ -89,7 +88,7 @@
             (mouseleave)='mouseLeaveRow(i)'></tr>
 
         <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="7">Nenhum dado corresponde ao filtro "{{input.value}}"</td>
+            <td class="mat-cell" colspan="7">Nenhum dado corresponde ao filtro "{{searchInput.value}}"</td>
         </tr>
     </table>
 

@@ -6,6 +6,7 @@ using Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Interfaces.
 using Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Interfaces.Services;
 using Ronaldo.GestaoDeFuncionarios.Core.SharedKernel.Entities;
 using Ronaldo.GestaoDeFuncionarios.Core.SharedKernel.Interfaces.UnityOfWork;
+using System;
 using System.Collections.Generic;
 
 namespace Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Services
@@ -41,26 +42,47 @@ namespace Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Service
         {
             var departmentForCheckId = _departmentRepository.Get(employeeForRegisterDto.idDepartment);
             if (departmentForCheckId == null)
-                return new ResponseObject<EmployeeForReadDto>(false, "Não existe um departamento com ID informado");
+                return new ResponseObject<EmployeeForReadDto>(false, "Departamento inexistente");
+
+            var employeeForCheckLogin = _employeeRepository.Get(employeeForRegisterDto.Login);
+            if (employeeForCheckLogin != null)
+                return new ResponseObject<EmployeeForReadDto>(false, "Login já cadastrado");
+
+            if (employeeForRegisterDto.Access && _employeeRepository.CountAccess() > 10)
+                return new ResponseObject<EmployeeForReadDto>(false, "Dismarque a opção acesso ao sistema. Limite excedido");
 
             var employeeForRegister = _mapper.Map<Employee>(employeeForRegisterDto);
             _employeeRepository.Post(employeeForRegister);
-            var commit = _unityOfWork.Commit();
+            try
+            {
+                var commit = _unityOfWork.Commit();
 
-            return commit
-                ? new ResponseObject<EmployeeForReadDto>(true, obj: _mapper.Map<EmployeeForReadDto>(employeeForRegister))
-                : new ResponseObject<EmployeeForReadDto>(false);
+                return commit
+                    ? new ResponseObject<EmployeeForReadDto>(true, obj: _mapper.Map<EmployeeForReadDto>(employeeForRegister))
+                    : new ResponseObject<EmployeeForReadDto>(false);
+            }
+            catch (Exception e)
+            {
+                return new ResponseObject<EmployeeForReadDto>(false, e.InnerException.Message, null);
+            }
         }
 
         public ResponseObject<EmployeeForReadDto> Put(EmployeeForUpdateDto employeeForUpdateDto)
         {
             var departmentForCheckId = _departmentRepository.Get(employeeForUpdateDto.idDepartment);
             if (departmentForCheckId == null)
-                return new ResponseObject<EmployeeForReadDto>(false, "Não existe um departamento com o ID informado");
+                return new ResponseObject<EmployeeForReadDto>(false, "Departamento inexistente");
+
+            var employeeForCheckLogin = _employeeRepository.Get(employeeForUpdateDto.Login);
+            if (employeeForCheckLogin != null && employeeForCheckLogin.Id != employeeForUpdateDto.Id)
+                return new ResponseObject<EmployeeForReadDto>(false, "Login já cadastrado");
+
+            if (employeeForUpdateDto.Access && _employeeRepository.CountAccess() > 10)
+                return new ResponseObject<EmployeeForReadDto>(false, "Dismarque a opção acesso ao sistema! Limite excedido");
 
             var employeeForCheckId = _employeeRepository.Get(employeeForUpdateDto.Id);
             if (employeeForCheckId == null)
-                return new ResponseObject<EmployeeForReadDto>(false, "Não existe um funcionário com o ID informado");
+                return new ResponseObject<EmployeeForReadDto>(false, "Funcionário inexistente");
 
             var employeeForUpdate = _mapper.Map<Employee>(employeeForUpdateDto);
             _employeeRepository.Put(employeeForUpdate);
@@ -89,6 +111,15 @@ namespace Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Service
             return commit
                 ? new ResponseObject<bool>(true, "Funcionários excluídos com sucesso", true)
                 : new ResponseObject<bool>(false, "A exclusão falhou", false);
+        }
+
+        public ResponseObject<bool> CanAccess()
+        {
+            var countAccess = _employeeRepository.CountAccess();
+
+            return countAccess <= 10
+                ? new ResponseObject<bool>(true, "Pode Acessar", true)
+                : new ResponseObject<bool>(false, "Dismarque a opção acesso ao sistema! Limite excedido", false);
         }
     }
 }

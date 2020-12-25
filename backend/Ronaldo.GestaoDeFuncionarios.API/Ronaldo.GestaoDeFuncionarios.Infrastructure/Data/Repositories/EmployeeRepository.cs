@@ -12,11 +12,19 @@ namespace Ronaldo.GestaoDeFuncionarios.Infrastructure.Data.Repositories
         {
         }
 
+        public int CountAccess()
+        {
+            return _dataContext.Set<Employee>().Count(e => e.Access == true);
+        }
+
         public IEnumerable<Employee> Get()
         {
-            return _dataContext.Employees
-                .Include(employee => employee.Department)
-                .ToList();
+            return _dataContext.Set<Employee>().Include(employee => employee.Department).ToList();
+        }
+
+        public Employee Get(string login)
+        {
+            return _dataContext.Set<Employee>().AsNoTracking().FirstOrDefault(e => e.Login == login);
         }
 
         public void Delete(IEnumerable<Employee> employees)
@@ -29,7 +37,7 @@ namespace Ronaldo.GestaoDeFuncionarios.Infrastructure.Data.Repositories
                 employeesForRemove.Add(allEmployees.FirstOrDefault(e => e.Id == item.Id));
             }
 
-            _dataContext.Employees.RemoveRange(employeesForRemove);
+            _dataContext.Set<Employee>().RemoveRange(employeesForRemove);
         }
     }
 }
