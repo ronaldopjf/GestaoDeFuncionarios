@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { isNullOrUndefined } from 'util';
+import { SelectionModel } from '@angular/cdk/collections';
 
 import { EmployeeForRead } from 'src/app/models/employee/employeeForRead';
 import { EmployeeService } from 'src/app/services/employee.service';
@@ -12,7 +12,6 @@ import { EmployeeCreateUpdateComponent } from '../employee-create-update/employe
 import { EmployeeForCreateUpdate } from 'src/app/models/employee/employeeForCreateUpdate';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm/confirm-dialog/confirm-dialog.component';
 import { HeaderService } from 'src/app/services/header.service';
-import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-employee-list',
@@ -27,7 +26,7 @@ export class EmployeeListComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild('searchInput') searchInput: ElementRef;
-  private isDisplayed;
+  private isDisplayed: boolean;
 
   public constructor(
     private dialog: MatDialog,
@@ -89,7 +88,7 @@ export class EmployeeListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (!isNullOrUndefined(result)) {
+      if (result != null && result != undefined) {
         this.deleteEmployee(employeeForDelete.id)
       }
     });
@@ -110,7 +109,7 @@ export class EmployeeListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (!isNullOrUndefined(result)) {
+      if (result != null && result != undefined) {
         this.deleteManyEmployees(this.dataSource.filteredData)
       }
     });
@@ -119,7 +118,7 @@ export class EmployeeListComponent implements OnInit {
   private deleteManyEmployees(employees: EmployeeForRead[]): void {
     this.employeeService.deleteManyEmployees(employees).subscribe(result => {
       this.openSnackBar('Ação realizada com sucesso', 'Excluir Funcionários');
-      this.applyCleanFilter();
+      this.clearFilter();
       this.getEmployees();
     }, (error) => {
       this.openSnackBar(error.error.error, 'Excluir Funcionários');
@@ -143,7 +142,7 @@ export class EmployeeListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (!isNullOrUndefined(result)) {
+      if (result != null && result != undefined) {
         if (!result.id) {
           this.createEmployee(result);
         } else {
@@ -162,7 +161,7 @@ export class EmployeeListComponent implements OnInit {
     }
   }
 
-  public applyCleanFilter(): any {
+  public clearFilter(): any {
     this.selection.clear();
     const inputValue = this.searchInput.nativeElement.value = '';
     this.dataSource.filter = inputValue.trim().toLowerCase();
@@ -192,21 +191,18 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
   public isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numRows > 0 && numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   public masterToggle(): void {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  /** The label for the checkbox on the passed row */
   public checkboxLabel(row?: EmployeeForRead): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;

@@ -53,6 +53,7 @@ namespace Ronaldo.GestaoDeFuncionarios.Core.Aggregates.EmployeeAggregate.Service
 
             var employeeForRegister = _mapper.Map<Employee>(employeeForRegisterDto);
             _employeeRepository.Post(employeeForRegister);
+
             try
             {
                 var commit = _unityOfWork.Commit();

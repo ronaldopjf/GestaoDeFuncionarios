@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isNullOrUndefined } from 'util';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -45,7 +44,7 @@ export class BaseService {
 
     for (const key in parameters) {
       if (parameters.hasOwnProperty(key)) {
-        if (!isNullOrUndefined(parameters[key])) {
+        if (parameters[key] != null && parameters[key] != undefined) {
           if (colocarEComercial) {
             queryString += '&';
           }

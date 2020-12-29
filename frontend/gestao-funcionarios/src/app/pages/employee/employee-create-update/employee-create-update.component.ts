@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EmployeeForCreateUpdate } from 'src/app/models/employee/employeeForCreateUpdate';
 import { EmployeeService } from 'src/app/services/employee.service';
 
 import { Department } from '../../../models/department/department';
@@ -25,6 +26,7 @@ export class EmployeeCreateUpdateComponent implements OnInit {
 
   public ngOnInit(): void {
     this.getDepartments();
+    this.dialogRef.disableClose = true;
   }
 
   private getDepartments(): void {

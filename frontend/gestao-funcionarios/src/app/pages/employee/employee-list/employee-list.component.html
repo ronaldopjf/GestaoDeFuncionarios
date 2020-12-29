@@ -8,18 +8,17 @@
     <mat-label>Busca</mat-label>
     <input matInput #searchInput (keyup)="applyFilter($event)" placeholder="Ex. Ana">
 </mat-form-field>
-<button mat-icon-button *ngIf="searchInput.value" (click)="applyCleanFilter()" color="primary">
+<button mat-icon-button *ngIf="searchInput.value" (click)="clearFilter()" color="primary">
     <mat-icon>clear</mat-icon>
 </button>
 
 <p id="pCountRegisters">{{dataSource.filteredData.length}} registros</p>
 
-<p>
+<p *ngIf="dataSource.filteredData.length > 0">
     <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
         [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
     </mat-checkbox>
-    <button *ngIf="dataSource.filteredData.length > 0" class="btnAction btnDelete" id="btnDeleteAll"
-        [hidden]="!isAllSelected()" (click)="confirmDeletionOfMany()">
+    <button class="btnAction btnDelete" id="btnDeleteAll" [hidden]="!isAllSelected()" (click)="confirmDeletionOfMany()">
         <mat-icon>delete</mat-icon>
     </button>
 </p>

@@ -14,6 +14,7 @@ export class ConfirmDialogComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
+    this.dialogRef.disableClose = true;
   }
 
   public onNoClick(): void {
